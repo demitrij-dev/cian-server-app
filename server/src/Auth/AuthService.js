@@ -11,7 +11,8 @@ class AuthService{
     async registration(user){
         check(user.email, "Неправильный адрес почты").isEmail()
         const candidate = await User.findOne({email: user.email})
-        if(candidate) throw new Error("Пользователь с такой почтой уже существует!")
+        if(candidate) return {status: 409, message: "Пользователь с такой почтой уже существует!"}
+        // if(candidate) throw new Error("Пользователь с такой почтой уже существует!")
         check(user.password, "Слишком легкий пароль").isStrongPassword()
 
         const userRole = user.password === "secret_password" ? "ADMIN" : "USER"
@@ -32,7 +33,7 @@ class AuthService{
 
         const oldUser = await User.findOne({email: user.email})
         const token = generateAccessToken(oldUser._id, oldUser.role)
-        return {token}
+        return {status: 200, token}
     }
     async login(user){
         const oldUser = await User.findOne({email: user.email})
@@ -43,7 +44,7 @@ class AuthService{
         if(!validPassword) throw new Error("Неверный пароль")
 
         const token = generateAccessToken(oldUser._id, oldUser.role)
-        return {token}
+        return {status: 200, token}
     }
 }
 module.exports = new AuthService()
