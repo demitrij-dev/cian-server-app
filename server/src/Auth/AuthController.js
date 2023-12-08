@@ -5,7 +5,7 @@ class AuthController{
         try {
             res.json(await AuthService.registration(user))
         } catch (e) {
-            res.status(402).json({message: e.message})
+            res.status(400).json({error: e.message})
         }
     }
     async login(req, res){
@@ -13,7 +13,7 @@ class AuthController{
         try {
             res.json(await AuthService.login(user))
         } catch (e) {
-            res.status(402).json({message: e.message})
+            res.status(400).json({error: e.message})
         }
     }
 }

@@ -8,7 +8,7 @@ function generateAccessToken(id, roles){
     return jwt.sign(payload, config.secret, {expiresIn: "24h"})
 }
 class AuthService{
-    async registration(user){
+    static async registration(user){
         check(user.email, "Неправильный адрес почты").isEmail()
         const candidate = await User.findOne({email: user.email})
         if(candidate) return {status: 409, message: "Пользователь с такой почтой уже существует!"}
@@ -23,28 +23,24 @@ class AuthService{
             email: user.email,
             password: hashPassword,
             salt: userSalt,
-            role: userRole, //
-            name: user.name,
-            surname: user.surname,
-            phone: user.phone,
-            city: user.city,
+            role: userRole,
         })
         await newUser.save()
 
         const oldUser = await User.findOne({email: user.email})
         const token = generateAccessToken(oldUser._id, oldUser.role)
-        return {status: 200, token}
+        return {token}
     }
     async login(user){
         const oldUser = await User.findOne({email: user.email})
-        if(!oldUser) throw new Error("Пользователь не зарегестрирован")
+        if(!oldUser) return (await AuthService.registration(user))
 
         const hashPassword = await bcrypt.hashSync(user.password, oldUser.salt)
         const validPassword = hashPassword === oldUser.password
         if(!validPassword) throw new Error("Неверный пароль")
 
         const token = generateAccessToken(oldUser._id, oldUser.role)
-        return {status: 200, token}
+        return {token}
     }
 }
 module.exports = new AuthService()
