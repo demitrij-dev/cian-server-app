@@ -3,6 +3,7 @@ const {json} = require("express")
 const dotenv = require("dotenv")
 dotenv.config()
 const AuthRouter = require("./src/Auth/AuthRouter")
+const DataRouter = require("./src/Data/DataRouter")
 const mongoose = require("mongoose")
 
 const PORT = process.env.PORT
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 });
 app.use(json())
 app.use("/server", AuthRouter)
+app.use("/data", DataRouter)
 
 const start = async () => {
     try {
