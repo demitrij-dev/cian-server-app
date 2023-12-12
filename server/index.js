@@ -1,43 +1,42 @@
 const express = require("express")
 const {json} = require("express")
+const cors = require('cors');
 const dotenv = require("dotenv")
 dotenv.config()
 const AuthRouter = require("./src/Auth/AuthRouter")
 const DataRouter = require("./src/Data/DataRouter")
 const mongoose = require("mongoose")
+const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 
-const PORT = process.env.PORT || 8080;
-const URL = process.env.URL || "mongodb+srv://root:root@ciandb.slhlhib.mongodb.net/"
+const PORT = 8080
+const URL = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`;
 
 const app = express()
 
-const allowedOrigins = [
-    'http://localhost:3000',
-    'https://www.postman.com',
-    'https://web.postman.co',
-    'https://cian-client-app.vercel.app'
-];
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    next();
-});
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'https://www.postman.com',
+        'https://web.postman.co',
+        'https://cian-client-app.vercel.app'
+    ],
+    credentials: true,
+}));
 app.use(json())
 app.use("/server", AuthRouter)
 app.use("/data", DataRouter)
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
 
 const start = async () => {
     try {
-        await mongoose.connect(URL)
-        app.listen(PORT, () => console.log("\nSUCCESSFULLY STARTED ON %i", PORT))
+        await mongoose.connect(URL, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log('Connected to MongoDB');
+        app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
     } catch (e) {
-        console.log(e)
+        console.error('Error starting the server:', e.message);
     }
-}
+};
 start().then()
