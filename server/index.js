@@ -6,20 +6,26 @@ const AuthRouter = require("./src/Auth/AuthRouter")
 const DataRouter = require("./src/Data/DataRouter")
 const mongoose = require("mongoose")
 
-const PORT = 3000
-const URL = "mongodb+srv://root:root@ciandb.slhlhib.mongodb.net/"
+const PORT = process.env.PORT || 8080;
+const URL = process.env.URL || "mongodb+srv://root:root@ciandb.slhlhib.mongodb.net/"
 
 const app = express()
 
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://www.postman.com',
+    'https://web.postman.co',
+    'https://cian-client-app.vercel.app'
+];
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.header('Access-Control-Allow-Origin', 'https://www.postman.com/');
-    res.header('Access-Control-Allow-Origin', 'https://web.postman.co/');
-    res.header('Access-Control-Allow-Origin', 'https://cian-client-app.vercel.app/');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     next();
 });
 app.use(json())
