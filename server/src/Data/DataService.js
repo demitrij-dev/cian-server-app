@@ -7,8 +7,14 @@ class DataService{
             price: {$gte: filters.min_price, $lte: filters.max_price},
             square: {$gte: (filters.square || 10) - 10, $lte: (filters.square ? filters.square + 10 : 99999)},
             flor: filters.flor || {$gte: 0, $lte: Number.MAX_SAFE_INTEGER},
-            rooms: { $in: (filters.rooms.split(",")) },
-            address: { $regex: filters.address, $options: "i" }
+            address: { $regex: filters.address, $options: "i" },
+            rooms: {
+                $in: (
+                    filters.rooms && typeof filters.rooms === 'string'
+                        ? filters.rooms.split(",")
+                        : ["1", "2", "3", "4", "5"]
+                ),
+            },
         }
         return Estate.find(searchedEstate)
     }
