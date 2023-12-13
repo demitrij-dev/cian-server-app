@@ -9,7 +9,7 @@ const mongoose = require("mongoose")
 const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 
 const PORT = 8080
-const URL = `mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@${MONGODB_HOST}:${MONGODB_PORT}/${MONGODB_DATABASE}`;
+const URL = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@ciandb.slhlhib.mongodb.net`;
 
 const app = express()
 
@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
 
 const start = async () => {
     try {
-        await mongoose.connect(URL, { useNewUrlParser: true, useUnifiedTopology: true });
+        await mongoose.connect(URL);
         console.log('Connected to MongoDB');
         app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
     } catch (e) {
