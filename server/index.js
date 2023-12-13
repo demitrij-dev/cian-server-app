@@ -6,9 +6,9 @@ dotenv.config()
 const AuthRouter = require("./src/Auth/AuthRouter")
 const DataRouter = require("./src/Data/DataRouter")
 const mongoose = require("mongoose")
-const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
+const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, PORT, MONGODB_DATABASE } = process.env;
 
-const PORT = MONGODB_PORT
+const port = process.env.PORT || 4000
 const URL = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@ciandb.slhlhib.mongodb.net`;
 
 const app = express()
@@ -34,7 +34,7 @@ const start = async () => {
     try {
         await mongoose.connect(URL);
         console.log('Connected to MongoDB');
-        app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+        app.listen(port, () => console.log(`Server is listening on port ${port}`));
     } catch (e) {
         console.error('Error starting the server:', e.message);
     }
