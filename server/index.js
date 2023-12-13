@@ -8,7 +8,7 @@ const DataRouter = require("./src/Data/DataRouter")
 const mongoose = require("mongoose")
 const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_PORT, MONGODB_DATABASE } = process.env;
 
-const PORT = 8080
+const PORT = MONGODB_PORT
 const URL = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@ciandb.slhlhib.mongodb.net`;
 
 const app = express()
