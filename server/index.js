@@ -9,17 +9,12 @@ const mongoose = require("mongoose")
 const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_HOST, MONGODB_DATABASE } = process.env;
 
 const PORT = process.env.PORT || 3030;
-const URL = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@ciandb.slhlhib.mongodb.net`;
+const URL = `mongodb+srv://${MONGODB_USER || "lox"}:${MONGODB_PASSWORD }@ciandb.slhlhib.mongodb.net`;
 
 const app = express()
 
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'https://www.postman.com',
-        'https://web.postman.co',
-        'https://cian-client-app.vercel.app'
-    ],
+    origin: '*',
     credentials: true,
 }));
 app.use(json())
