@@ -14,7 +14,7 @@ const URL = `mongodb+srv://${MONGODB_USER || "lox"}:${MONGODB_PASSWORD }@ciandb.
 const app = express()
 
 app.use(cors({
-    origin: '*',
+    origin: 'https://cian-client-app.vercel.app',
     credentials: true,
 }));
 app.use(json())
