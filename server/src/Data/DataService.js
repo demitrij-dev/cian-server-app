@@ -5,14 +5,14 @@ class DataService{
             type_of_rental: { $regex: filters.type_of_rental, $options: "i" },
             type_of_estate: { $regex: filters.type_of_estate, $options: "i" },
             price: {$gte: filters.min_price, $lte: filters.max_price},
-            square: {$gte: (filters.square || 10) - 10, $lte: (filters.square ? filters.square + 10 : 99999)},
+            square: {$gte: (filters.square || 10) - 10, $lte: (filters.square ? filters.square + 10 : Number.MAX_SAFE_INTEGER)},
             flor: filters.flor || {$gte: 0, $lte: Number.MAX_SAFE_INTEGER},
             address: { $regex: filters.address, $options: "i" },
             rooms: {
                 $in: (
                     filters.rooms && typeof filters.rooms === 'string'
                         ? filters.rooms.split(",")
-                        : ["1", "2", "3", "4", "5"]
+                        : [1, 2, 3, 4, 5]
                 ),
             },
         }

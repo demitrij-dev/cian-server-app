@@ -4,7 +4,7 @@ class DataController{
         const filters = {
             type_of_estate: req.query.type_of_estate || "",
             type_of_rental: req.query.type_of_rental || "",
-            rooms: req.query.rooms || ["1", "2", "3", "4", "5"],
+            rooms: req.query.rooms || [1, 2, 3, 4, 5],
             min_price: req.query.min_price || 0,
             max_price: req.query.max_price || Number.MAX_SAFE_INTEGER,
             address: req.query.address || "",
